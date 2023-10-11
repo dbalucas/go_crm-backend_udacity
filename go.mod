@@ -1,3 +1,3 @@
-module github.com/dbalucas/GoLang-Udacity/go_crm_backend
+module github.com/dbalucas/Go-CRM-Backend_Udacity
 
 go 1.21.2
