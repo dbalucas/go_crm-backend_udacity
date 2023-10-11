@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -19,35 +20,35 @@ type Customer struct {
 }
 
 // Mock Database and init values
-var Customers = map[uint32]Customer{
-	1: {
+var Customers = map[string]Customer{
+	"1": {
+		Name:  "Anton",
+		Role:  "Sales",
+		Email: "sales.Anton@gmail.com",
+		Phone: "+49 876 54321",
+	},
+	"2": {
 		Name:  "Bernd",
 		Role:  "Sales",
 		Email: "sales.bernd@gmail.com",
 		Phone: "+49 876 54321",
 	},
-	2: {
-		Name:  "Bernd",
+	"3": {
+		Name:  "Cäsar",
 		Role:  "Sales",
-		Email: "sales.bernd@gmail.com",
+		Email: "sales.caesar@gmail.com",
 		Phone: "+49 876 54321",
 	},
-	3: {
-		Name:  "Bernd",
+	"4": {
+		Name:  "Doris",
 		Role:  "Sales",
-		Email: "sales.bernd@gmail.com",
+		Email: "sales.doris@gmail.com",
 		Phone: "+49 876 54321",
 	},
-	4: {
-		Name:  "Bernd",
+	"5": {
+		Name:  "Emil",
 		Role:  "Sales",
-		Email: "sales.bernd@gmail.com",
-		Phone: "+49 876 54321",
-	},
-	5: {
-		Name:  "Bernd",
-		Role:  "Sales",
-		Email: "sales.bernd@gmail.com",
+		Email: "sales.Emil@gmail.com",
 		Phone: "+49 876 54321",
 	},
 }
@@ -66,15 +67,41 @@ func getCustomers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Customers)
 	w.WriteHeader(http.StatusOK)
 }
+
+// From POST request create new Customer if not exists
 func addCustomer(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/json")
+	// new Entry var
+	var newCustomer Customer
+	// read the request body
+	requestBody, _ := io.ReadAll(r.Body)
+	// parse JSON body
+	json.Unmarshal(requestBody, &newCustomer)
+	// insert new Entry into Customers map
+	// for k, v := range newCustomer {
+	// 	if _, ok := Customers[k]; !ok {
+	// 		Customers[k] = v
+	// 	}
+
+	// }
 
 	w.WriteHeader(http.StatusCreated)
 }
-func getCustomer(w http.ResponseWriter, r *http.Request) {
 
-	w.WriteHeader(http.StatusOK)
+// Retrieve single customer by ID in /customer/{id}
+func getCustomer(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/json")
+	id := mux.Vars(r)["id"]
+	if _, ok := Customers[id]; ok {
+		json.NewEncoder(w).Encode(Customers[id])
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+	}
 }
+
 func updateCustomer(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/json")
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -105,7 +132,10 @@ func webServe() {
 	router.HandleFunc("/customers/{id}", deleteCustomer).Methods("DELETE")
 
 	fmt.Println("Starting the server on: ", url)
-	http.ListenAndServe(url, router)
+	err := http.ListenAndServe(url, router)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
