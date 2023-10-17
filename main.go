@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -20,16 +21,65 @@ type Customer struct {
 	Contacted bool      `json:"contacted,omitempty"`
 }
 
-var mock_db []Customer
+// type CustomerRepository interface {
+// 	// Save
+// 	FindAll() ([]Customer, error)
+// 	FindByID(uuid.UUID) (Customer, error)
+// 	Save(Customer) (Customer, error)
+// 	DeleteByID(uuid.UUID) error
+// }
+
+// var mockDb []Customer
+
+type CustomerRepository struct {
+	customers []Customer
+}
+
+func (c CustomerRepository) FindAll() ([]Customer, error) {
+	return c.customers, nil
+}
+
+func (c CustomerRepository) findIndexByID(id uuid.UUID) (int, error) {
+	for index, customer := range c.customers {
+		if customer.ID == id {
+			return index, nil
+		}
+	}
+	return 0, errors.New("not found")
+}
+
+func (c CustomerRepository) FindByID(id uuid.UUID) (Customer, error) {
+	index, err := c.findIndexByID(id)
+	if err != nil {
+		return c.customers[index], nil
+	}
+	return Customer{}, errors.New("not found")
+}
+
+func (c CustomerRepository) Save(newCustomer Customer) (Customer, error) {
+	c.customers = append(c.customers, newCustomer)
+	return newCustomer, nil
+}
+
+func (c CustomerRepository) DeleteByID(id uuid.UUID) error {
+	index, err := c.findIndexByID(id)
+	if err != nil {
+		c.customers = append(c.customers[:index], c.customers[index+1:]...)
+		return nil
+	}
+	return errors.New("not found")
+
+}
+
 var CurrentID uuid.UUID
 
-func init_db() {
-	mock_db = append(mock_db, Customer{ID: getNextUniqueID(), Name: "Anton", Role: "account manager", Email: "sales.Anton@gmail.com", Phone: 4987654321, Contacted: true})
-	mock_db = append(mock_db, Customer{ID: getNextUniqueID(), Name: "Bernd", Role: "marketing", Email: "marketing.bernd@gmail.com", Phone: 4987654321, Contacted: true})
-	mock_db = append(mock_db, Customer{ID: getNextUniqueID(), Name: "Cäsar", Role: "product manager", Email: "product.caesar@web.com", Phone: 4987654321, Contacted: true})
-	mock_db = append(mock_db, Customer{ID: getNextUniqueID(), Name: "Doris", Role: "admin", Email: "admin.doris@gmail.com", Phone: 4987654321, Contacted: true})
-	mock_db = append(mock_db, Customer{ID: getNextUniqueID(), Name: "Emil", Role: "Evangelist", Email: "Evangelist.Emil@gmail.com", Phone: 4987654321, Contacted: true})
-	fmt.Printf("Database initialized with %v entities. \n", len(mock_db))
+func init_db(customerRepo CustomerRepository) {
+	customerRepo.Save(Customer{ID: getNextUniqueID(), Name: "Anton", Role: "account manager", Email: "sales.Anton@gmail.com", Phone: 4987654321, Contacted: true})
+	customerRepo.Save(Customer{ID: getNextUniqueID(), Name: "Bernd", Role: "marketing", Email: "marketing.bernd@gmail.com", Phone: 4987654321, Contacted: true})
+	customerRepo.Save(Customer{ID: getNextUniqueID(), Name: "Cäsar", Role: "product manager", Email: "product.caesar@web.com", Phone: 4987654321, Contacted: true})
+	customerRepo.Save(Customer{ID: getNextUniqueID(), Name: "Doris", Role: "admin", Email: "admin.doris@gmail.com", Phone: 4987654321, Contacted: true})
+	customerRepo.Save(Customer{ID: getNextUniqueID(), Name: "Emil", Role: "Evangelist", Email: "Evangelist.Emil@gmail.com", Phone: 4987654321, Contacted: true})
+	fmt.Printf("Database initialized with %v entities. \n", len(customerRepo.customers))
 }
 
 func getNextUniqueID() uuid.UUID {
@@ -47,7 +97,8 @@ func serverStatic(w http.ResponseWriter, r *http.Request) {
 // Recieve all customers
 func getCustomers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(mock_db)
+	json.NewEncoder(w).Encode(mockDb)
+	// add pagination
 }
 
 // From POST request create new Customer if not exists
@@ -60,9 +111,11 @@ func addCustomer(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return // early  fail to avoid duplicate writing of status code
 	}
+
+	// auslagern in eigenständige Funktion
 	// insert new Entry into Customers map
 	newCustomer.ID = getNextUniqueID()
-	mock_db = append(mock_db, newCustomer)
+	mockDb = append(mockDb, newCustomer)
 
 	// output new entry
 	w.WriteHeader(http.StatusCreated)
@@ -71,12 +124,12 @@ func addCustomer(w http.ResponseWriter, r *http.Request) {
 }
 
 // Retrieve single customer by ID in /customer/{id}
-func getCustomer(w http.ResponseWriter, r *http.Request) {
+func getCustomer(w http.ResponseWriter, r *http.Request, c *CustomerRepository) {
 	vars := mux.Vars(r)
 	CustomerID, _ := uuid.Parse(vars["id"])
 
 	var foundCustomer *Customer
-	for _, customer := range mock_db {
+	for _, customer := range mockDb {
 		if customer.ID == CustomerID {
 			foundCustomer = &customer
 			break
@@ -97,11 +150,43 @@ func updateCustomer(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteCustomer(w http.ResponseWriter, r *http.Request) {
-	// if not found fail
-	if false {
+	// Get ID from Var ULR
+	vars := mux.Vars(r)
+	customerID, _ := uuid.Parse(vars["id"])
+	var foundCustomer *Customer
+	var mockDbIndex int
+
+	for sliceIndex, customer := range mockDb {
+		if customer.ID == customerID {
+			foundCustomer = &customer
+			mockDbIndex = sliceIndex
+			break
+		} else {
+			// do nothing
+			foundCustomer = nil
+		}
+	}
+	// if not found fail else remove
+	if foundCustomer == nil {
 		w.WriteHeader(http.StatusNotFound)
 	} else {
 		w.WriteHeader(http.StatusOK)
+		mockDb = deleteAt(mockDb, mockDbIndex)
+		fmt.Fprintf(w, "Custemer %v %v was removed", foundCustomer.ID, foundCustomer.Name)
+	}
+}
+
+func deleteAt(slice []Customer, index int) []Customer {
+	return append(slice[:index], slice[index+1:]...)
+}
+
+type MuxHandler = func(http.ResponseWriter, *http.Request)
+
+type CustomHandler = func(http.ResponseWriter, *http.Request, *CustomerRepository)
+
+func wrap(f CustomHandler, c *CustomerRepository) MuxHandler {
+	return func(w http.ResponseWriter, r *http.Request) {
+		f(w, r, c)
 	}
 }
 
@@ -111,12 +196,14 @@ func main() {
 
 	var url = host + ":" + strconv.Itoa(port)
 
-	init_db()
+	customerRepository := &CustomerRepository{}
+
+	init_db(customerRepository)
 
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", serverStatic)
-	router.HandleFunc("/customers", getCustomers).Methods("GET")
+	router.HandleFunc("/customers", wrap(getCustomer, customerRepository)).Methods("GET")
 	router.HandleFunc("/customers", addCustomer).Methods("POST")
 	router.HandleFunc("/customers/{id}", getCustomer).Methods("GET")
 	router.HandleFunc("/customers/{id}", updateCustomer).Methods("PUT")
