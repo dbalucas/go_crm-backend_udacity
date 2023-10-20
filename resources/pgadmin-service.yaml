@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: crm-backend
+  name: pgadmin # Sets service name
+  labels:
+    app: pgadmin # Labels and Selectors
+spec:
+  type: NodePort # Sets service type
+  ports:
+    - port: 5432 # Sets port to run the pgadmin application
+  selector:
+    app: pgadmin

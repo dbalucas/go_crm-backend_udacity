@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: crm-backend
+  name: pgadmin-config
+  labels:
+    app: pgadmin
+data:
+  PGADMIN_DEFAULT_EMAIL: "gorm@crm-backend.com"
+  PGADMIN_DEFAULT_PASSWORD: "gorm"
+  PGADMIN_LISTEN_ADDRESS: "localhost"
+  PGADMIN_LISTEN_PORT: "8080"

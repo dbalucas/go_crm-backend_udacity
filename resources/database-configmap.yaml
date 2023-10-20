@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: crm-backend
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: gorm
+  POSTGRES_USER: gorm
+  POSTGRES_PASSWORD: gorm
