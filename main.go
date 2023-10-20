@@ -121,12 +121,13 @@ func serverStatic(w http.ResponseWriter, r *http.Request) {
 }
 
 // getCustomers godoc
-// @Summery Recieve all customers
-// @Description
-// @Tags customers
-// @Produce  json
-// @Success 200 {slice} Customers
-// @Router /customers [get]
+//
+//	@Summery	Recieve all customers
+//	@Description
+//	@Tags		customers
+//	@Produce	json
+//	@Success	200	{slice}	Customers
+//	@Router		/customers [get]
 func getCustomers(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
@@ -135,14 +136,15 @@ func getCustomers(w http.ResponseWriter, r *http.Request) {
 }
 
 // addCustomer godoc
-// @Summary Add a new customer
-// @Description From POST request create new Customer if not exists
-// @Tags customer
-// @Accept  json
-// @Produce  json
-// @Param customer body Customer true "Add new Customer"
-// @Success 200 {object} Customer
-// @Router /customers [post]
+//
+//	@Summary		Add a new customer
+//	@Description	From POST request create new Customer if not exists
+//	@Tags			customer
+//	@Accept			json
+//	@Produce		json
+//	@Param			customer	body		Customer	true	"Add new Customer"
+//	@Success		200			{object}	Customer
+//	@Router			/customers [post]
 func addCustomer(w http.ResponseWriter, r *http.Request) {
 	// new customer entry
 	var newCustomer Customer
@@ -169,7 +171,15 @@ func addCustomer(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(customer)
 }
 
-// Retrieve single customer by ID in /customer/{id}
+// getCustomer godoc
+//
+//	@Summery		Recieve single customer by uuid
+//	@Description	Retrieve single customer by ID in /customer/{id}
+//	@Tags			customers
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	customer	Customer
+//	@Router			/customers/{id} [get]
 func getCustomer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	CustomerID, _ := uuid.Parse(vars["id"])
@@ -184,7 +194,16 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(foundCustomer)
 }
 
-// update Customer by ID
+// updateCustomer godoc
+//
+//	@Summary		Update an existing customer by its uuid
+//	@Description	From POST request update an existing customer by its uuid if exists
+//	@Tags			customer
+//	@Accept			json
+//	@Produce		json
+//	@Param			customer	body		Customer	true	"update new Customer"
+//	@Success		200			{object}	Customer
+//	@Router			/customers [put]
 func updateCustomer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	CustomerID, _ := uuid.Parse(vars["id"])
@@ -207,7 +226,16 @@ func updateCustomer(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(updateCustomer)
 }
 
-// remove a single Customer by ID
+// deleteCustomer godoc
+//
+//	@Summary		Update an existing customer by its uuid
+//	@Description	remove a single Customer by ID
+//	@Tags			customer
+//	@Accept			json
+//	@Produce		json
+//	@Param			customer	body	Customer	true	"delete new Customer"
+//	@Success		200
+//	@Router			/customers [delete]
 func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	// Get ID from Var ULR
 	vars := mux.Vars(r)

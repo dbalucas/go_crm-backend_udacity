@@ -30,6 +30,25 @@ info:
   version: "1.0"
 paths:
   /customers:
+    delete:
+      consumes:
+      - application/json
+      description: remove a single Customer by ID
+      parameters:
+      - description: delete new Customer
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/main.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Update an existing customer by its uuid
+      tags:
+      - customer
     get:
       produces:
       - application/json
@@ -61,4 +80,39 @@ paths:
       summary: Add a new customer
       tags:
       - customer
+    put:
+      consumes:
+      - application/json
+      description: From POST request update an existing customer by its uuid if exists
+      parameters:
+      - description: update new Customer
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/main.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Customer'
+      summary: Update an existing customer by its uuid
+      tags:
+      - customer
+  /customers/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve single customer by ID in /customer/{id}
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: customer
+      tags:
+      - customers
 swagger: "2.0"

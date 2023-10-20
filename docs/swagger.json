@@ -34,6 +34,38 @@
                     }
                 }
             },
+            "put": {
+                "description": "From POST request update an existing customer by its uuid if exists",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "customer"
+                ],
+                "summary": "Update an existing customer by its uuid",
+                "parameters": [
+                    {
+                        "description": "update new Customer",
+                        "name": "customer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.Customer"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "From POST request create new Customer if not exists",
                 "consumes": [
@@ -62,6 +94,57 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/main.Customer"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "remove a single Customer by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "customer"
+                ],
+                "summary": "Update an existing customer by its uuid",
+                "parameters": [
+                    {
+                        "description": "delete new Customer",
+                        "name": "customer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/customers/{id}": {
+            "get": {
+                "description": "Retrieve single customer by ID in /customer/{id}",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "customers"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "customer"
                         }
                     }
                 }
