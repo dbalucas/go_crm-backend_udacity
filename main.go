@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -28,6 +29,21 @@ type Customer struct {
 type CustomerRepository struct {
 	customers []Customer
 }
+
+// // Setup database cofiguration
+// type DbConfig struct {
+// 	dbHost     string
+// 	dbUser     string
+// 	dbPassword string
+// 	dbName     string
+// 	dbPort     string
+// 	dbSslMode  string
+// 	dbTimeZone string
+// }
+// func (db *DbConfig) getDsn() (string, error) {
+// 	dsn := "host=" + db.dbHost + " user=" + db.dbUser + " password=" + db.dbPassword + " dbname=" + db.dbName + " port=" + db.dbPort + " sslmode=" + db.dbSslMode + " TimeZone=" + db.dbTimeZone
+// 	return dsn, nil
+// }
 
 // Intiate the Database globally
 var customerRepository = &CustomerRepository{}
@@ -91,7 +107,6 @@ func (c *CustomerRepository) DeleteByID(id uuid.UUID) error {
 	}
 	c.customers = deleteAtIndex(c.customers, index)
 	return nil
-
 }
 
 // from inserted slice, remove item by slice index
@@ -113,10 +128,9 @@ func getNextUniqueID() uuid.UUID {
 	return CurrentID
 }
 
-// TODO:
 // brief overview of the API
 func serverStatic(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/html")
+	w.Header().Set("Content-Type", "text/html")
 	http.ServeFile(w, r, "static/index.html")
 }
 
@@ -251,6 +265,27 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// var db *gorm.DB
+
+// func initDB() {
+// 	var err error
+// 	dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
+// 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		panic("failed to connect database")
+// 	}
+
+// 	// Create the database. This is a one-time step.
+// 	// Comment out if running multiple times - You may see an error otherwise
+// 	db.Exec("CREATE DATABASE orders_db")
+// 	db.Exec("USE orders_db")
+
+// 	// Migration to create tables for Order and Item schema
+// 	db.AutoMigrate(&CustomerRepository{})
+// }
+
 //	@title			CRM - GOlang API Documentation
 //	@version		1.0
 //	@description	This is a sample crm-server and contains a final project of a udacity course
@@ -267,15 +302,29 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 // @BasePath	/
 func main() {
 	const port = 3000
-	const host = "localhost"
+	const host = "0.0.0.0"
 
 	var url = host + ":" + strconv.Itoa(port)
+
+	// // Database configuration
+	// dbConfig := DbConfig{
+	// 	dbHost:     "localhost",
+	// 	dbUser:     "gorm",
+	// 	dbPassword: "gorm",
+	// 	dbName:     "gorm",
+	// 	dbPort:     "5432",
+	// 	dbSslMode:  "disable",
+	// 	dbTimeZone: "Berlin/Germany",
+	// }
+	// dsn, _ := dbConfig.getDsn()
+	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	init_db(customerRepository)
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", serverStatic)
+	router.HandleFunc("/", serverStatic).Methods("GET")
+
 	router.HandleFunc("/customers", getCustomers).Methods("GET")
 	router.HandleFunc("/customers", addCustomer).Methods("POST")
 	router.HandleFunc("/customers/{id}", getCustomer).Methods("GET")
@@ -285,8 +334,6 @@ func main() {
 	router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler).Methods(http.MethodGet)
 
 	fmt.Println("Starting the server on: ", url)
-	err := http.ListenAndServe(url, router)
-	if err != nil {
-		panic(err)
-	}
+	log.Panic(http.ListenAndServe(url, router))
+
 }

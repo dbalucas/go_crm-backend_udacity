@@ -6,12 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CRM-Backend API</title>
   </head>
+
   <body>
     <h1>How to use the CRM-Backend API</h1>
+
+    <h1 id="project-features">Project features</h1>
+    <p>
+      The project represents the backend of a customer relationship management
+      (CRM) web application. As users interact with the app via some user
+      interface, your server will support all of the functionalities:
+    </p>
     <ul>
-      <li>Reason 1</li>
-      <li>Reason 2</li>
-      <li>Reason 3</li>
+      <li>[x] Getting a list of all customers</li>
+      <li>[x] Getting data for a single customer</li>
+      <li>[x] Adding a customer</li>
+      <li>[x] Updating a customer&#39;s information</li>
+      <li>[x] Removing a customer</li>
+      <li>[x] Swagger API Documentation</li>
+    </ul>
+    <h2 id="crm-endpoints-">CRM Endpoints:</h2>
+    <h3 id="api-documentation">API Documentation</h3>
+    <p>
+      You can find all required information
+      <a href="http://localhost:3000/swagger/index.html">here</a>
+    </p>
+    <h3 id="this-crm-backend-offers-following-endpoints-">
+      This CRM Backend offers following endpoints:
+    </h3>
+    <pre><code class="lang-shell">curl <span class="hljs-string">localhost:</span><span class="hljs-number">3000</span>/
+curl <span class="hljs-string">localhost:</span><span class="hljs-number">3000</span><span class="hljs-regexp">/swagger/</span>index.html
+curl -X GET <span class="hljs-string">localhost:</span><span class="hljs-number">3000</span>/customers
+curl -X GET <span class="hljs-string">localhost:</span><span class="hljs-number">3000</span><span class="hljs-regexp">/customers/</span>{id}
+curl -X POST <span class="hljs-string">localhost:</span><span class="hljs-number">3000</span><span class="hljs-regexp">/customers/</span>{id}
+curl -X DELETE <span class="hljs-string">localhost:</span><span class="hljs-number">3000</span>/customers{id}
+</code></pre>
+    <p>Responses come with JSON.</p>
+    <h2 id="crm-functions-">CRM Functions:</h2>
+    <ul>
+      <li>getCustomers()</li>
+      <li>getCustomer()</li>
+      <li>addCustomer()</li>
+      <li>updateCustomer()</li>
+      <li>deleteCustomer()</li>
     </ul>
   </body>
 </html>
