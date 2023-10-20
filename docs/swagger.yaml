@@ -1,0 +1,64 @@
+basePath: /
+definitions:
+  main.Customer:
+    properties:
+      contacted:
+        type: boolean
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone:
+        type: integer
+      role:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: https://github.com/dbalucas
+    name: https://github.com/dbalucas
+    url: https://github.com/dbalucas
+  description: This is a sample crm-server and contains a final project of a udacity
+    course
+  license:
+    url: https://github.com/dbalucas/go_crm-backend_udacity/blob/main/LICENSE
+  termsOfService: http://swagger.io/terms/
+  title: CRM - GOlang API Documentation
+  version: "1.0"
+paths:
+  /customers:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: slice
+      tags:
+      - customers
+    post:
+      consumes:
+      - application/json
+      description: From POST request create new Customer if not exists
+      parameters:
+      - description: Add new Customer
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/main.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Customer'
+      summary: Add a new customer
+      tags:
+      - customer
+swagger: "2.0"

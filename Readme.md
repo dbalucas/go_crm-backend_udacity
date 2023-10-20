@@ -1,16 +1,21 @@
 # Project features
 The project represents the backend of a customer relationship management (CRM) web application. As users interact with the app via some user interface, your server will support all of the functionalities:
 
-- [ ] Getting a list of all customers
-- [ ] Getting data for a single customer
-- [ ] Adding a customer
-- [ ] Updating a customer's information
-- [ ] Removing a customer
+- [x] Getting a list of all customers
+- [x] Getting data for a single customer
+- [x] Adding a customer
+- [x] Updating a customer's information
+- [x] Removing a customer
+- [x] Swagger API Documentation 
 
 ## CRM Endpoints:
-This CRM Backend offers following endpoints:
+### API Documentation
+You can find all required information [here](http://localhost:3000/swagger/index.html)
+
+### This CRM Backend offers following endpoints:
 ```shell
 curl localhost:3000/
+curl localhost:3000/swagger/index.html
 curl -X GET localhost:3000/customers
 curl -X GET localhost:3000/customers/{id}
 curl -X POST localhost:3000/customers/{id}
