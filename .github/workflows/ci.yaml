@@ -43,7 +43,7 @@ jobs:
   #   strategy:
   #     matrix:
   #       go-version: ['1.21.3']
-    steps:
+    # steps:
     - name: Run go vet
       run: go vet ./...
 
@@ -70,9 +70,9 @@ jobs:
   #   name: "DOCUMENTATION"
   #   runs-on: ubuntu-latest
   #   steps:
-      - name: Install Go
-        run: go get -u github.com/swaggo/swag/cmd/swag
-      - name: Run swagger
-        run: swag fmt
-      - name: swag init
-        run: swag init
+    - name: Install Go
+      run: go get -u github.com/swaggo/swag/cmd/swag
+    - name: Run swagger
+      run: swag fmt
+    - name: swag init
+      run: swag init
