@@ -71,8 +71,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   steps:
     - name: Install Go
-      run: go get -u github.com/swaggo/swag/cmd/swag
-    - name: Run swagger
-      run: swag fmt
-    - name: swag init
-      run: swag init
+      run: |
+        go get -u github.com/swaggo/swag/cmd/swag
+        swag fmt
+        swag init
