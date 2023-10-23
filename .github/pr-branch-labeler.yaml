@@ -1,0 +1,20 @@
+ci/cd:
+  head: "ci/*"
+  
+refactor:
+  head: "refactor/*"
+
+feature:
+  head: "feature/*"
+
+bug:
+  head: ["bugfix/*", "fix/*"]
+
+documentation:
+  head: "docs/*"
+
+housekeeping:
+  head: "housekeeping/*"
+
+release:
+  base: "release/*"
