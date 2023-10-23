@@ -1,18 +1,19 @@
 version: '3.9'
 
 services:
-  go-app:
-    container_name: go-app
+  crm_app:
+    container_name: crm_app
     image: srelucas/crm-backend:latest
     build: .
     environment:
       DATABASE_URL: "host=go_db user=postgres password=postgres dbname=postgres sslmode=disable"
+      SERVICE_PRECONDITION: "namenode:50070"
     ports:
       - "3000:3000"
     depends_on:
-      - go_db
-  go_db:
-    container_name: go_db
+      - crm_db
+  crm_db:
+    container_name: crm_db
     image: postgres:15
     environment:
       POSTGRES_PASSWORD: postgres
