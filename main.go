@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -30,7 +31,7 @@ type CustomerRepository struct {
 	customers []Customer
 }
 
-// // Setup database cofiguration
+//// Setup database cofiguration
 // type DbConfig struct {
 // 	dbHost     string
 // 	dbUser     string
@@ -162,10 +163,12 @@ func getCustomers(w http.ResponseWriter, r *http.Request) {
 func addCustomer(w http.ResponseWriter, r *http.Request) {
 	// new customer entry
 	var newCustomer Customer
-	// read the request body & parse JSON body
-	err := json.NewDecoder(r.Body).Decode(&newCustomer)
+	// read the request body
+	request, _ := io.ReadAll(r.Body)
+	//	parse JSON body
+	err := json.Unmarshal(request, &newCustomer)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		return // early fail to avoid duplicate writing of status code
 	}
 
@@ -223,8 +226,14 @@ func updateCustomer(w http.ResponseWriter, r *http.Request) {
 	CustomerID, _ := uuid.Parse(vars["id"])
 	var updateCustomer Customer
 
-	// read the request body & parse JSON body
-	err := json.NewDecoder(r.Body).Decode(&updateCustomer)
+	// read the request body
+	request, _ := io.ReadAll(r.Body)
+	//	parse JSON body
+	err := json.Unmarshal(request, &updateCustomer)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return // early fail to avoid duplicate writing of status code
+	}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return // early  fail to avoid duplicate writing of status code
@@ -265,18 +274,6 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// var db *gorm.DB
-
-// func initDB() {
-// 	var err error
-// 	dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
-// 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		panic("failed to connect database")
-// 	}
-
 // 	// Create the database. This is a one-time step.
 // 	// Comment out if running multiple times - You may see an error otherwise
 // 	db.Exec("CREATE DATABASE orders_db")
@@ -316,8 +313,12 @@ func main() {
 	// 	dbSslMode:  "disable",
 	// 	dbTimeZone: "Berlin/Germany",
 	// }
-	// dsn, _ := dbConfig.getDsn()
+	// dsn, nil := dbConfig.getDsn()
 	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// if err != nil {
+	// 	log.Fatal("database connection not possible:\n")
+	// }
+	// fmt.Print(db)
 
 	init_db(customerRepository)
 
