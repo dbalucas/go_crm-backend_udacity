@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: "BUILD"
+    # name: "BUILD"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,12 +37,12 @@ jobs:
     - name: Build
       run: go build -v ./...
   
-  linter:
-    name: "LINTING"
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version: ['1.21.3']
+  # linter:
+  #   name: "LINTING"
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       go-version: ['1.21.3']
     steps:
     - name: Run go vet
       run: go vet ./...
@@ -59,17 +59,17 @@ jobs:
     - name: Run golint
       run: golint ./...
   
-  tests:
-    name: "TESTING"
-    runs-on: ubuntu-latest
-    steps:
+  # tests:
+  #   name: "TESTING"
+  #   runs-on: ubuntu-latest
+  #   steps:
     - name: Test
       run: go test -race -vet=off ./...
   
-  documentation:
-    name: "DOCUMENTATION"
-    runs-on: ubuntu-latest
-    steps:
+  # documentation:
+  #   name: "DOCUMENTATION"
+  #   runs-on: ubuntu-latest
+  #   steps:
       - name: Install Go
         run: go get -u github.com/swaggo/swag/cmd/swag
       - name: Run swagger
