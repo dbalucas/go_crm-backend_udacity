@@ -161,31 +161,45 @@ func getCustomers(w http.ResponseWriter, r *http.Request) {
 //	@Success		200			{object}	Customer
 //	@Router			/customers [post]
 func addCustomer(w http.ResponseWriter, r *http.Request) {
-	// new customer entry
-	var newCustomer Customer
-	// read the request body
-	request, _ := io.ReadAll(r.Body)
-	//	parse JSON body
-	err := json.Unmarshal(request, &newCustomer)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return // early fail to avoid duplicate writing of status code
-	}
+	// read the request body & parse JSON body
+	decoder := json.NewDecoder(r.Body)
 
-	// insert new Entry into Customers map
-	addedCustomer, _ := customerRepository.Save(newCustomer)
+	var addedCustomers []Customer
 
-	// get new entry from database for validation pupose
-	customer, err := customerRepository.FindByID(addedCustomer.ID)
-	if err != nil {
-		http.Error(w, "could retrieve newly added item from database "+addedCustomer.ID.String(), http.StatusNotFound)
-		return // early fail to avoid duplicate writing of status code
+	// insert new Entry into customerRepository
+	for {
+		// new customer entry
+		var newCustomer Customer
+
+		err := decoder.Decode(&newCustomer)
+		if err == io.EOF {
+			// done
+			break
+		}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			break
+		}
+
+		addedCustomer, err := customerRepository.Save(newCustomer)
+		if err != nil {
+			http.Error(w, "save new entry failed: "+addedCustomer.Name, http.StatusBadRequest)
+		}
+
+		// get new entry from database for validation pupose
+		addedCustomer, err = customerRepository.FindByID(addedCustomer.ID)
+		if err != nil {
+			http.Error(w, "could retrieve newly added item from database "+addedCustomer.ID.String(), http.StatusNotFound)
+			return // early fail to avoid duplicate writing of status code
+		}
+
+		addedCustomers = append(addedCustomers, addedCustomer)
 	}
 
 	// output new entry
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(customer)
+	json.NewEncoder(w).Encode(addedCustomers)
 }
 
 // getCustomer godoc
