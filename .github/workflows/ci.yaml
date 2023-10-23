@@ -27,9 +27,7 @@ jobs:
       run: go version
     
     - name: Install dependencies
-      run: |
-        go get .
-        go get github.com/gorilla/mux
+      run: go get .
       
     - name: Verify dependencies
       run: go mod verify
