@@ -273,6 +273,18 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//	@title			CRM - GOlang API Documentation
+//	@version		1.0
+//	@description	This is a sample crm-server and contains a final project of a udacity course
+//	@termsOfService	http://swagger.io/terms/
+
+//	@contact.name	https://github.com/dbalucas
+//	@contact.url	https://github.com/dbalucas
+//	@contact.email	https://github.com/dbalucas
+
+// license.name MIT License
+//	@license.url	https://github.com/dbalucas/go_crm-backend_udacity/blob/main/LICENSE
+
 // @host		localhost:3000
 // @BasePath	/
 func main() {
