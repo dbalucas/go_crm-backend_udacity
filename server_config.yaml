@@ -2,3 +2,11 @@ server:
   http:
     port: 3000
     hostname: "localhost"
+db:
+  postgres:
+    dbHost: "localhost"
+    dbUser: "postgres"
+    dbPassword: "postgres"
+    dbName: "postgres"
+    dbPort: "5432"
+    dbSslMode: "disable"

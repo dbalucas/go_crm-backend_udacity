@@ -73,3 +73,8 @@ Responses come with JSON.
 1.  Create an additional endpoint that updates customer values in a batch (i.e., rather than for a single customer).
 2.  Upgrade the mock database to a real database (e.g., PostgreSQL).
 3.  Deploy the API to the web.
+
+
+
+# Credits to:
+- [MitchDresdner](https://github.com/MitchDresdner/winestore/tree/master) for the Property and Parsing Code Example
