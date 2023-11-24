@@ -1,1 +1,4 @@
 Golang mock database https://stackoverflow.com/questions/75798345/golang-create-a-mock-database-with-handler-and-call-to-database-using-interfaces
+
+
+vs code debug for golang https://vscode-debug-specs.github.io/go/

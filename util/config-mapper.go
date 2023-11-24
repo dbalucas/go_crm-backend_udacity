@@ -33,6 +33,8 @@ func ReadConfigYAML() (string, error) {
 		fmt.Printf("key %s: %s\n", k, v)
 	}
 
-	return fmt.Sprintf("host=%s port=%s dbname=%s sslmode=%s user=%s \n", config.Db.Pg["dbHost"], config.Db.Pg["dbPort"],
-		config.Db.Pg["dbName"], config.Db.Pg["dbSslMode"], config.Db.Pg["dbUser"]), nil
+	dsn := fmt.Sprintf("host=%s port=%s dbname=%s sslmode=%s user=%s password=%s \n", config.Db.Pg["dbHost"], config.Db.Pg["dbPort"],
+		config.Db.Pg["dbName"], config.Db.Pg["dbSslMode"], config.Db.Pg["dbUser"], config.Db.Pg["dbPassword"])
+
+	return dsn, nil
 }

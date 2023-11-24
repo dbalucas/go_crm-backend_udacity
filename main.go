@@ -24,24 +24,6 @@ type CustomerRepository struct {
 	customers []models.Customer
 }
 
-// // Database cofiguration
-// type DbConfig struct {
-// 	dbHost     string
-// 	dbUser     string
-// 	dbPassword string
-// 	dbName     string
-// 	dbPort     string
-// 	dbSslMode  string
-// 	// dbTimeZone string
-// }
-
-// // get Connection string for database
-// func (dbConfig *DbConfig) getDsn() (string, error) {
-// 	dsn := "host=" + dbConfig.dbHost + " user=" + dbConfig.dbUser + " password=" + dbConfig.dbPassword + " dbname=" + dbConfig.dbName + " port=" + dbConfig.dbPort + " sslmode=" + dbConfig.dbSslMode
-// 	//+ " TimeZone=" + dbConfig.dbTimeZone
-// 	return dsn, nil
-// }
-
 // Intiate the Database globally
 var customerRepository = &CustomerRepository{}
 
@@ -306,7 +288,6 @@ func main() {
 
 	var backendUrl = host + ":" + strconv.Itoa(port)
 
-
 	// // Database configuration
 	// dbConfig := DbConfig{
 	// 	dbHost:     "localhost",
@@ -326,26 +307,6 @@ func main() {
 	models.ConnectDB(dsn)
 
 	initDB()
-
-	// sqlStatement := `
-	// 	CREATE TABLE customers (
-	// 	uuid SERIAL PRIMARY KEY,
-	// 	name VARCHAR(100),
-	// 	role VARCHAR(100),
-	// 	email VARCHAR(100),
-	// 	phone INT,
-	// 	contacted BOOLEAN
-	// )`
-	// err = models.CreateTable(sqlStatement, db)
-	// if err == nil {
-	// 	fmt.Println("Successfully created Table: ", sqlStatement)
-	// } else {
-	// 	panic(err)
-	// }
-
-	// defer db.Close()
-  
-	init_db(customerRepository)
 
 	// Webserver Routing
 	router := mux.NewRouter()

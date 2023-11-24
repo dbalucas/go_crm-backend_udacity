@@ -4,7 +4,7 @@ server:
     hostname: "localhost"
 db:
   postgres:
-    dbHost: "localhost"
+    dbHost: "0.0.0.0"
     dbUser: "postgres"
     dbPassword: "postgres"
     dbName: "postgres"

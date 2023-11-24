@@ -13,11 +13,16 @@ type RepoDB struct {
 }
 
 func ConnectDB(dataSourceName string) (*RepoDB, error) {
+	fmt.Print(dataSourceName)
 	db, err := sql.Open("postgres", dataSourceName)
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
 	if err = db.Ping(); err != nil {
 		log.Fatalf("failed to ping database: %v", err)
 	}
