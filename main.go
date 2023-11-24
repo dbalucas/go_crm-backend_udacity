@@ -31,21 +31,6 @@ type CustomerRepository struct {
 	customers []Customer
 }
 
-//// Setup database cofiguration
-// type DbConfig struct {
-// 	dbHost     string
-// 	dbUser     string
-// 	dbPassword string
-// 	dbName     string
-// 	dbPort     string
-// 	dbSslMode  string
-// 	dbTimeZone string
-// }
-// func (db *DbConfig) getDsn() (string, error) {
-// 	dsn := "host=" + db.dbHost + " user=" + db.dbUser + " password=" + db.dbPassword + " dbname=" + db.dbName + " port=" + db.dbPort + " sslmode=" + db.dbSslMode + " TimeZone=" + db.dbTimeZone
-// 	return dsn, nil
-// }
-
 // Intiate the Database globally
 var customerRepository = &CustomerRepository{}
 
@@ -288,15 +273,6 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// 	// Create the database. This is a one-time step.
-// 	// Comment out if running multiple times - You may see an error otherwise
-// 	db.Exec("CREATE DATABASE orders_db")
-// 	db.Exec("USE orders_db")
-
-// 	// Migration to create tables for Order and Item schema
-// 	db.AutoMigrate(&CustomerRepository{})
-// }
-
 //	@title			CRM - GOlang API Documentation
 //	@version		1.0
 //	@description	This is a sample crm-server and contains a final project of a udacity course
@@ -316,23 +292,6 @@ func main() {
 	const host = "0.0.0.0"
 
 	var url = host + ":" + strconv.Itoa(port)
-
-	// // Database configuration
-	// dbConfig := DbConfig{
-	// 	dbHost:     "localhost",
-	// 	dbUser:     "gorm",
-	// 	dbPassword: "gorm",
-	// 	dbName:     "gorm",
-	// 	dbPort:     "5432",
-	// 	dbSslMode:  "disable",
-	// 	dbTimeZone: "Berlin/Germany",
-	// }
-	// dsn, nil := dbConfig.getDsn()
-	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	// if err != nil {
-	// 	log.Fatal("database connection not possible:\n")
-	// }
-	// fmt.Print(db)
 
 	init_db(customerRepository)
 
