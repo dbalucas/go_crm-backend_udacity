@@ -306,6 +306,7 @@ func main() {
 
 	var backendUrl = host + ":" + strconv.Itoa(port)
 
+
 	// // Database configuration
 	// dbConfig := DbConfig{
 	// 	dbHost:     "localhost",
@@ -343,6 +344,8 @@ func main() {
 	// }
 
 	// defer db.Close()
+  
+	init_db(customerRepository)
 
 	// Webserver Routing
 	router := mux.NewRouter()

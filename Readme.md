@@ -74,7 +74,14 @@ Responses come with JSON.
 2.  Upgrade the mock database to a real database (e.g., PostgreSQL).
 3.  Deploy the API to the web.
 
-
-
 # Credits to:
 - [MitchDresdner](https://github.com/MitchDresdner/winestore/tree/master) for the Property and Parsing Code Example
+
+# Sources I toke coding approaches and ideas from:
+- stackoverflow
+- [go tutorial (official)](https://github.com/golang/go/wiki/SQLInterface)
+- https://www.soberkoder.com/go-rest-api-mysql-gorm/
+- https://www.soberkoder.com/swagger-go-api-swaggo/
+- https://www.soberkoder.com/go-rest-api-gorilla-mux/
+- in case i missed somthing / someone please open a pr and i'll add you as inspirations
+
