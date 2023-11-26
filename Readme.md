@@ -32,6 +32,9 @@ Responses come with JSON.
 
 # Development Documentation
 
+## Prerequisites for Postgres:
+- [] ` Create extentions "uudi-ossp";`
+
 ## Best Practices
 --------------
 

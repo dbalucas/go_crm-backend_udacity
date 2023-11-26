@@ -16,21 +16,26 @@ type Config struct {
 	}
 }
 
-func ReadConfigYAML() (string, error) {
-	data, err := os.ReadFile("./server_config.yaml")
+func ReadConfigYAML() (Config, error) {
+	data, err := os.ReadFile("./crm_config.yaml")
 	if err != nil {
-		return "", err
+		return Config{}, err
 	}
 
-	// unmarshall config file into struct
+	// unmarshall config file into Config struct
 	var config Config
 	err = yaml.Unmarshal([]byte(data), &config)
 	if err != nil {
-		return "", err
+		return Config{}, err
 	}
 
-	for k, v := range config.Db.Pg {
-		fmt.Printf("key %s: %s\n", k, v)
+	return config, nil
+}
+
+func GetDBConnectionString(config Config) (string, error) {
+	config, err := ReadConfigYAML()
+	if err != nil {
+		return "", err
 	}
 
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s sslmode=%s user=%s password=%s \n", config.Db.Pg["dbHost"], config.Db.Pg["dbPort"],
