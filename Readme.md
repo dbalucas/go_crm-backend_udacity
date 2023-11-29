@@ -32,6 +32,10 @@ Responses come with JSON.
 
 # Development Documentation
 
+## Next steps:
+- fix prefill not to run, if db is not empty
+- change the CRM functions to work with database
+
 ## Prerequisites for Postgres:
 - [] ` Create extentions "uudi-ossp";`
 

@@ -110,7 +110,7 @@ func initDB(db *models.RepoDB) (err error) {
 		log.Panic("could not create customers tables " + fmt.Sprint(err))
 		return err
 	}
-	log.Println("created customers table")
+	log.Printf("created customers table")
 	return nil
 }
 
@@ -119,15 +119,19 @@ func getNewUniqueID() uuid.UUID {
 }
 
 func prefillDB(db *models.RepoDB, customerRepository CustomerRepository) (err error) {
+
 	sqlStatement := `
 		INSERT INTO customers (id, name, role, email, phone, contacted)
-		VALUES ($1, $2, $3, $4, $5, $6)`
+		VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING id`
 
 	for _, customer := range customerRepository.customers {
-		_, err = db.Exec(sqlStatement, getNewUniqueID(), customer.Name, customer.Role, customer.Email, customer.Phone, customer.Contacted)
+		var id []uint8
+		err = db.QueryRow(sqlStatement, getNewUniqueID(), customer.Name, customer.Role, customer.Email, customer.Phone, customer.Contacted).Scan(&id)
 		if err != nil {
 			log.Printf("could not insert into customers table: %s", err)
 		}
+		fmt.Println("new record ID is: ", string(id))
 	}
 
 	log.Printf("database initialized with %v entities. \n", len(customerRepository.customers))
@@ -319,11 +323,7 @@ func main() {
 	var host = config.Server.Http["host"]
 	var backendUrl = host + ":" + port
 
-	customerRepository.Save(models.Customer{Name: "Anton", Role: "account manager", Email: "sales.Anton@gmail.com", Phone: 4987654321, Contacted: true})
-	customerRepository.Save(models.Customer{Name: "Bernd", Role: "marketing", Email: "marketing.bernd@gmail.com", Phone: 4987654321, Contacted: true})
-	customerRepository.Save(models.Customer{Name: "Cäsar", Role: "product manager", Email: "product.caesar@web.com", Phone: 4987654321, Contacted: true})
-	customerRepository.Save(models.Customer{Name: "Doris", Role: "admin", Email: "admin.doris@gmail.com", Phone: 4987654321, Contacted: true})
-	customerRepository.Save(models.Customer{Name: "Emil", Role: "Evangelist", Email: "Evangelist.Emil@gmail.com", Phone: 4987654321, Contacted: true})
+
 
 	// get database connection string
 	dsn, err := util.GetDBConnectionString(config)
@@ -336,6 +336,13 @@ func main() {
 
 	// init database
 	initDB(db)
+
+	customerRepository.Save(models.Customer{Name: "Anton", Role: "account manager", Email: "sales.Anton@gmail.com", Phone: 4987654321, Contacted: true})
+	customerRepository.Save(models.Customer{Name: "Bernd", Role: "marketing", Email: "marketing.bernd@gmail.com", Phone: 4987654321, Contacted: true})
+	customerRepository.Save(models.Customer{Name: "Cäsar", Role: "product manager", Email: "product.caesar@web.com", Phone: 4987654321, Contacted: true})
+	customerRepository.Save(models.Customer{Name: "Doris", Role: "admin", Email: "admin.doris@gmail.com", Phone: 4987654321, Contacted: true})
+	customerRepository.Save(models.Customer{Name: "Emil", Role: "Evangelist", Email: "Evangelist.Emil@gmail.com", Phone: 4987654321, Contacted: true})
+	
 	prefillDB(db, *customerRepository)
 
 	// Webserver Routing
