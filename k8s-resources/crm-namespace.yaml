@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   labels:
     kubernetes.io/metadata.name: crm-backend
-  name: defacrm-backendult
+  name: crm-backendult

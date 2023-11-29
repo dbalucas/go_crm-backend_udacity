@@ -32,6 +32,13 @@ Responses come with JSON.
 
 # Development Documentation
 
+## Next steps:
+- fix prefill not to run, if db is not empty
+- change the CRM functions to work with database
+
+## Prerequisites for Postgres:
+- [] ` Create extentions "uudi-ossp";`
+
 ## Best Practices
 --------------
 
@@ -74,6 +81,8 @@ Responses come with JSON.
 2.  Upgrade the mock database to a real database (e.g., PostgreSQL).
 3.  Deploy the API to the web.
 
+# Credits to:
+- [MitchDresdner](https://github.com/MitchDresdner/winestore/tree/master) for the Property and Parsing Code Example
 
 # Sources I toke coding approaches and ideas from:
 - stackoverflow
@@ -82,3 +91,4 @@ Responses come with JSON.
 - https://www.soberkoder.com/swagger-go-api-swaggo/
 - https://www.soberkoder.com/go-rest-api-gorilla-mux/
 - in case i missed somthing / someone please open a pr and i'll add you as inspirations
+

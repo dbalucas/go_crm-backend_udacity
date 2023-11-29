@@ -4,7 +4,10 @@ go 1.21.2
 
 require github.com/gorilla/mux v1.8.0
 
-require github.com/google/uuid v1.3.1
+require (
+	github.com/google/uuid v1.3.1
+	github.com/lib/pq v1.10.9
+)
 
 require (
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
@@ -23,5 +26,5 @@ require (
 	github.com/swaggo/swag v1.16.2
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/tools v0.14.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gopkg.in/yaml.v3 v3.0.1
 )
